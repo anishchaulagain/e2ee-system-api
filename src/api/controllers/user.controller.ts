@@ -16,7 +16,7 @@ export const UserController = {
   /** GET /users/:id/public-key — fetch public key for E2EE key exchange */
   async getPublicKey(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const result = await UserService.getPublicKey(req.params.id);
+      const result = await UserService.getPublicKey(req.params.id as string);
       res.json({ data: result });
     } catch (err) {
       next(err);

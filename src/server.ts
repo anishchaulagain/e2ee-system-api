@@ -26,10 +26,7 @@ async function bootstrap(): Promise<void> {
 
   // 6. Start listening
   server.listen(config.port, config.host, () => {
-    logger.info(
-      { port: config.port, host: config.host, env: config.nodeEnv },
-      "Server started",
-    );
+    logger.info({ port: config.port, host: config.host, env: config.nodeEnv }, "Server started");
   });
 }
 

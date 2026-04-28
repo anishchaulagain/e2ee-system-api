@@ -6,6 +6,7 @@ import type { JwtPayload } from "../../domain/entities";
 
 // Extend Express Request to carry authenticated user data
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user?: JwtPayload;

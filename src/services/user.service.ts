@@ -16,10 +16,7 @@ function toPublic(row: User): UserPublic {
 export const UserService = {
   /** Get the current authenticated user's profile */
   async getById(userId: string): Promise<UserPublic> {
-    const result = await pool.query<User>(
-      "SELECT * FROM users WHERE id = $1",
-      [userId],
-    );
+    const result = await pool.query<User>("SELECT * FROM users WHERE id = $1", [userId]);
     if (result.rows.length === 0) {
       throw HttpError.notFound("User not found");
     }
@@ -27,7 +24,9 @@ export const UserService = {
   },
 
   /** Fetch another user's public key (for E2EE key exchange) */
-  async getPublicKey(userId: string): Promise<{ id: string; username: string; public_key: string }> {
+  async getPublicKey(
+    userId: string,
+  ): Promise<{ id: string; username: string; public_key: string }> {
     const result = await pool.query<Pick<User, "id" | "username" | "public_key">>(
       "SELECT id, username, public_key FROM users WHERE id = $1",
       [userId],
@@ -44,10 +43,10 @@ export const UserService = {
 
   /** Update the current user's public key (called by mobile app on first setup) */
   async updatePublicKey(userId: string, publicKey: string): Promise<void> {
-    await pool.query(
-      "UPDATE users SET public_key = $1, updated_at = NOW() WHERE id = $2",
-      [publicKey, userId],
-    );
+    await pool.query("UPDATE users SET public_key = $1, updated_at = NOW() WHERE id = $2", [
+      publicKey,
+      userId,
+    ]);
   },
 
   /** Search users by username (for starting new conversations) */

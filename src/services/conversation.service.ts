@@ -7,7 +7,10 @@ export const ConversationService = {
    * Create a 1-to-1 conversation between two users.
    * Returns existing conversation if one already exists between them.
    */
-  async createDirect(currentUserId: string, otherUserId: string): Promise<ConversationWithParticipants> {
+  async createDirect(
+    currentUserId: string,
+    otherUserId: string,
+  ): Promise<ConversationWithParticipants> {
     // Check if a direct conversation already exists between these two users
     const existing = await pool.query<{ conversation_id: string }>(
       `SELECT cp1.conversation_id

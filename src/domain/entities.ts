@@ -35,14 +35,14 @@ export interface Message {
   id: string;
   conversation_id: string;
   sender_id: string;
-  ciphertext: string;       // AES-256-GCM encrypted (base64)
-  nonce: string;             // 12-byte IV (base64)
+  ciphertext: string; // AES-256-GCM encrypted (base64)
+  nonce: string; // 12-byte IV (base64)
   created_at: Date;
 }
 
 // ─── Auth / JWT ────────────────────────────────────────
 export interface JwtPayload {
-  sub: string;       // user id
+  sub: string; // user id
   username: string;
 }
 

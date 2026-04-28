@@ -13,7 +13,9 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-authRouter.post("/register", authLimiter, AuthController.register);
-authRouter.post("/login", authLimiter, AuthController.login);
-authRouter.post("/refresh", AuthController.refresh);
-authRouter.post("/logout", AuthController.logout);
+authRouter.post("/register", authLimiter, (req, res, next) =>
+  AuthController.register(req, res, next),
+);
+authRouter.post("/login", authLimiter, (req, res, next) => AuthController.login(req, res, next));
+authRouter.post("/refresh", (req, res, next) => AuthController.refresh(req, res, next));
+authRouter.post("/logout", (req, res, next) => AuthController.logout(req, res, next));

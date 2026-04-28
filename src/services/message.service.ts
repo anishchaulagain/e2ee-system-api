@@ -28,10 +28,7 @@ export const MessageService = {
     );
 
     // Update conversation's updated_at timestamp
-    await pool.query(
-      "UPDATE conversations SET updated_at = NOW() WHERE id = $1",
-      [conversationId],
-    );
+    await pool.query("UPDATE conversations SET updated_at = NOW() WHERE id = $1", [conversationId]);
 
     return result.rows[0];
   },
@@ -59,10 +56,9 @@ export const MessageService = {
          LIMIT $2 OFFSET $3`,
         [conversationId, pageSize, offset],
       ),
-      pool.query<{ count: string }>(
-        "SELECT COUNT(*) FROM messages WHERE conversation_id = $1",
-        [conversationId],
-      ),
+      pool.query<{ count: string }>("SELECT COUNT(*) FROM messages WHERE conversation_id = $1", [
+        conversationId,
+      ]),
     ]);
 
     return {

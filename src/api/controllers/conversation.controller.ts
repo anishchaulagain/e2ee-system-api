@@ -31,7 +31,7 @@ export const ConversationController = {
   async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const conversation = await ConversationService.getById(
-        req.params.id,
+        req.params.id as string,
         req.user!.sub,
       );
       res.json({ data: conversation });

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { type SignOptions } from "jsonwebtoken";
 import crypto from "crypto";
 import { pool } from "../infra/database";
 import { config } from "../config";
@@ -20,10 +20,10 @@ export const AuthService = {
     publicKey?: string,
   ): Promise<TokenPair & { userId: string }> {
     // Check for duplicate username or email
-    const existing = await pool.query(
-      "SELECT id FROM users WHERE username = $1 OR email = $2",
-      [username, email],
-    );
+    const existing = await pool.query("SELECT id FROM users WHERE username = $1 OR email = $2", [
+      username,
+      email,
+    ]);
     if (existing.rows.length > 0) {
       throw HttpError.badRequest("Username or email already taken");
     }
@@ -44,10 +44,9 @@ export const AuthService = {
 
   /** Log in with username/email + password */
   async login(identifier: string, password: string): Promise<TokenPair & { userId: string }> {
-    const result = await pool.query<User>(
-      "SELECT * FROM users WHERE username = $1 OR email = $1",
-      [identifier],
-    );
+    const result = await pool.query<User>("SELECT * FROM users WHERE username = $1 OR email = $1", [
+      identifier,
+    ]);
 
     if (result.rows.length === 0) {
       throw HttpError.unauthorized("Invalid credentials");
@@ -99,11 +98,11 @@ export const AuthService = {
   /** Generate an access + refresh token pair and persist the refresh token hash */
   async generateTokens(payload: JwtPayload): Promise<TokenPair> {
     const accessToken = jwt.sign(payload, config.jwt.accessSecret, {
-      expiresIn: config.jwt.accessExpiresIn,
+      expiresIn: config.jwt.accessExpiresIn as SignOptions["expiresIn"],
     });
 
     const refreshToken = jwt.sign(payload, config.jwt.refreshSecret, {
-      expiresIn: config.jwt.refreshExpiresIn,
+      expiresIn: config.jwt.refreshExpiresIn as SignOptions["expiresIn"],
     });
 
     // Persist hashed refresh token
@@ -125,10 +124,15 @@ function parseDuration(dur: string): number {
   if (!match) return 7 * 24 * 60 * 60 * 1000; // default 7 days
   const val = parseInt(match[1], 10);
   switch (match[2]) {
-    case "s": return val * 1000;
-    case "m": return val * 60 * 1000;
-    case "h": return val * 60 * 60 * 1000;
-    case "d": return val * 24 * 60 * 60 * 1000;
-    default:  return 7 * 24 * 60 * 60 * 1000;
+    case "s":
+      return val * 1000;
+    case "m":
+      return val * 60 * 1000;
+    case "h":
+      return val * 60 * 60 * 1000;
+    case "d":
+      return val * 24 * 60 * 60 * 1000;
+    default:
+      return 7 * 24 * 60 * 60 * 1000;
   }
 }

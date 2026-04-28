@@ -8,7 +8,7 @@ export const MessageController = {
     try {
       const body = sendMessageSchema.parse(req.body);
       const message = await MessageService.send(
-        req.params.id,
+        req.params.id as string,
         req.user!.sub,
         body.ciphertext,
         body.nonce,
@@ -19,7 +19,7 @@ export const MessageController = {
       const io = getIO();
       if (io) {
         // Emit to the conversation room — only participants who are online will receive it
-        io.to(`conversation:${req.params.id}`).emit("new_message", {
+        io.to(`conversation:${req.params.id as string}`).emit("new_message", {
           message,
         });
       }
@@ -35,7 +35,7 @@ export const MessageController = {
     try {
       const pagination = paginationSchema.parse(req.query);
       const result = await MessageService.list(
-        req.params.id,
+        req.params.id as string,
         req.user!.sub,
         pagination.page,
         pagination.pageSize,

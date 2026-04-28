@@ -27,7 +27,10 @@ export function setupSocket(server: HttpServer): Server {
 
   // Authentication middleware for socket connections
   io.use((socket, next) => {
-    const token = socket.handshake.auth.token || socket.handshake.headers.authorization?.replace("Bearer ", "");
+    const authHeader = socket.handshake.headers.authorization;
+    const token =
+      (socket.handshake.auth.token as string | undefined) ||
+      (typeof authHeader === "string" ? authHeader.replace("Bearer ", "") : undefined);
 
     if (!token) {
       return next(new Error("Authentication required"));
@@ -59,7 +62,7 @@ export function setupSocket(server: HttpServer): Server {
     try {
       const conversations = await ConversationService.listForUser(user.sub);
       for (const conv of conversations) {
-        socket.join(`conversation:${conv.id}`);
+        await socket.join(`conversation:${conv.id}`);
       }
       logger.info({ userId: user.sub, rooms: conversations.length }, "Joined conversation rooms");
     } catch (err) {
@@ -67,8 +70,8 @@ export function setupSocket(server: HttpServer): Server {
     }
 
     // Join a specific conversation room (e.g., after creating a new conversation)
-    socket.on("join_conversation", (conversationId: string) => {
-      socket.join(`conversation:${conversationId}`);
+    socket.on("join_conversation", async (conversationId: string) => {
+      await socket.join(`conversation:${conversationId}`);
       logger.debug({ userId: user.sub, conversationId }, "Joined conversation room");
     });
 

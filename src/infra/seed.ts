@@ -16,10 +16,10 @@ export async function seedUsers(): Promise<void> {
   }
 
   for (const user of config.seedUsers) {
-    const existing = await pool.query(
-      "SELECT id FROM users WHERE username = $1 OR email = $2",
-      [user.username, user.email],
-    );
+    const existing = await pool.query("SELECT id FROM users WHERE username = $1 OR email = $2", [
+      user.username,
+      user.email,
+    ]);
 
     if (existing.rows.length > 0) {
       logger.info({ username: user.username }, "Seed user already exists — skipping");

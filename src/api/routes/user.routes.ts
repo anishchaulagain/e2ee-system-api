@@ -7,7 +7,9 @@ export const userRouter = Router();
 // All user routes require authentication
 userRouter.use(authMiddleware);
 
-userRouter.get("/me", UserController.me);
-userRouter.put("/me/public-key", UserController.updatePublicKey);
-userRouter.get("/search", UserController.search);
-userRouter.get("/:id/public-key", UserController.getPublicKey);
+userRouter.get("/me", (req, res, next) => UserController.me(req, res, next));
+userRouter.put("/me/public-key", (req, res, next) =>
+  UserController.updatePublicKey(req, res, next),
+);
+userRouter.get("/search", (req, res, next) => UserController.search(req, res, next));
+userRouter.get("/:id/public-key", (req, res, next) => UserController.getPublicKey(req, res, next));

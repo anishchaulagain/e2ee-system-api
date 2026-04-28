@@ -56,10 +56,18 @@ export const config = {
   // Seed users
   seedUsers: [
     env.SEED_USER1_USERNAME && env.SEED_USER1_EMAIL && env.SEED_USER1_PASSWORD
-      ? { username: env.SEED_USER1_USERNAME, email: env.SEED_USER1_EMAIL, password: env.SEED_USER1_PASSWORD }
+      ? {
+          username: env.SEED_USER1_USERNAME,
+          email: env.SEED_USER1_EMAIL,
+          password: env.SEED_USER1_PASSWORD,
+        }
       : null,
     env.SEED_USER2_USERNAME && env.SEED_USER2_EMAIL && env.SEED_USER2_PASSWORD
-      ? { username: env.SEED_USER2_USERNAME, email: env.SEED_USER2_EMAIL, password: env.SEED_USER2_PASSWORD }
+      ? {
+          username: env.SEED_USER2_USERNAME,
+          email: env.SEED_USER2_EMAIL,
+          password: env.SEED_USER2_PASSWORD,
+        }
       : null,
   ].filter(Boolean) as { username: string; email: string; password: string }[],
 } as const;

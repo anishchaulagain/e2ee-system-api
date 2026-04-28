@@ -18,7 +18,7 @@ pool.on("error", (err) => {
 export async function connectDatabase(): Promise<void> {
   const client = await pool.connect();
   try {
-    const result = await client.query("SELECT NOW()");
+    const result = await client.query<{ now: string }>("SELECT NOW()");
     logger.info({ time: result.rows[0].now }, "Database connected");
   } finally {
     client.release();
